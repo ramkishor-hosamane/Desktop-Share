@@ -1,30 +1,54 @@
 
 import tkinter as tk
 import subprocess
-
-root = tk.Tk() 
-root.geometry('400x500')
-root.title("File share") 
-user_name = str(subprocess.check_output("whoami",shell=True),"utf-8")
+from home import Home
+from sender import Sender
 
 
-title =tk.Label(root,text="Welcome to File share "+user_name.capitalize(),relief='solid',fg='blue',bg='red',font=("arial",16,"bold"))
-title.pack(fill=tk.BOTH,padx=2,pady=2)
-image = tk.PhotoImage(file = "logo.png")
+class App(tk.Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+        self.container = tk.Frame(self)
+        self.geometry('500x600')
+        self.title("File share")
+        self.resizable(0, 0)
+        self.container.pack(side="top",fill="both",expand=1)
+        self.container.grid_rowconfigure(0,weight=1)
+        self.container.grid_columnconfigure(0,weight=1)
+        
+        self.frames = {}
+        self.user_name = str(subprocess.check_output("whoami",shell=True),"utf-8")
+        
+        self.create_frames()
+        self.show_frame("home_page")
 
-photo = tk.Label(image=image,width="400")
-photo.pack(fill=tk.BOTH,padx=2,pady=2)
+
+    
+    def hide_all_frames(self):
+        pass
+    
+    def show_frame(self,frame):
+        frame = self.frames[frame]
+        frame.tkraise()
+
+    def create_frames(self):
+        sender_page = Sender(self.container,self,self.user_name)
+        self.frames.update({"sender_page":sender_page})
+        sender_page.grid(row=0,column=0,sticky="nsew")
 
 
+        home_page = Home(self.container,self,self.user_name)
+        self.frames["home_page"]=home_page
+        home_page.grid(row=0,column=0,sticky="nsew")
 
 
-send = tk.Button(root,text="Send",relief=tk.GROOVE,fg='red',bg='orange',font=("arial",16,"bold"),command=print)
-send.pack(fill=tk.BOTH,padx=2,pady=20)
+        '''
+        reciever_page = Reciever(self.container)
+        self.frames.update({"reciever_page":reciever_page})
+        '''
 
 
-recieve = tk.Button(root,text="Recieve",relief=tk.GROOVE,fg='red',bg='orange',font=("arial",16,"bold"),command=print)
-recieve.pack(fill=tk.BOTH,padx=2,pady=10)
+app = App() 
 
-
-root.mainloop()
+app.mainloop()
 
