@@ -1,2 +1,2 @@
 # Desktop-Share
-A desktop screen sharing system (like Teamviewer,Opendesk) based on python socket programming
+A File sharing system based on python socket programming
