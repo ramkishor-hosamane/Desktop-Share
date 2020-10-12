@@ -2,8 +2,8 @@
 import tkinter as tk
 import subprocess
 from home import Home
-from sender import Sender
-
+from sender import Sender,Sender_Connect
+from receiver import Receiver_Connect
 
 class App(tk.Tk):
     def __init__(self):
@@ -15,9 +15,9 @@ class App(tk.Tk):
         self.container.pack(side="top",fill="both",expand=1)
         self.container.grid_rowconfigure(0,weight=1)
         self.container.grid_columnconfigure(0,weight=1)
-        
+
         self.frames = {}
-        self.user_name = str(subprocess.check_output("whoami",shell=True),"utf-8")
+        self.user_name = str(subprocess.check_output("whoami",shell=True),"utf-8").capitalize()
         
         self.create_frames()
         self.show_frame("home_page")
@@ -36,16 +36,24 @@ class App(tk.Tk):
         self.frames.update({"sender_page":sender_page})
         sender_page.grid(row=0,column=0,sticky="nsew")
 
-
         home_page = Home(self.container,self,self.user_name)
         self.frames["home_page"]=home_page
         home_page.grid(row=0,column=0,sticky="nsew")
 
 
-        '''
-        reciever_page = Reciever(self.container)
-        self.frames.update({"reciever_page":reciever_page})
-        '''
+
+    def connect_to_send(self):
+        sender_connect = Sender_Connect(self.container,self,self.user_name)
+        sender_connect.grid(row=0,column=0,sticky="nsew")
+        self.frames["sender_connect_page"] = sender_connect
+        self.show_frame("sender_connect_page")
+        
+    def connect_to_recieve(self):
+        receiver_connect = Receiver_Connect(self.container,self,self.user_name)
+        receiver_connect.grid(row=0,column=0,sticky="nsew")
+        self.frames["receiver_connect_page"] = receiver_connect
+        self.show_frame("receiver_connect_page")
+
 
 
 app = App() 
